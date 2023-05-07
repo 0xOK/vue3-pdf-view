@@ -1,13 +1,13 @@
-# vue-pdf
+# vue3-pdf-view
 vue.js pdf viewer is a package for Vue that enables you to display and view PDF's easily via vue components.
 
 ## Install via NPM/Yarn
 ```bash
-npm install vue-pdf
+npm install vue3-pdf-view
 ```
 
 ```bash
-yarn add vue-pdf
+yarn add vue3-pdf-view
 ```
 
 ## Example - basic
@@ -17,7 +17,7 @@ yarn add vue-pdf
 </template>
 
 <script>
-import pdf from 'vue-pdf'
+import pdf from 'vue3-pdf-view'
 
 export default {
   components: {
@@ -28,7 +28,7 @@ export default {
 
 ## Demo
 
-[vue-pdf demo on jsfiddle](https://jsfiddle.net/fossfiddler/5k4ptmqg/145/)
+[vue3-pdf-view demo on jsfiddle](https://jsfiddle.net/fossfiddler/5k4ptmqg/145/)
 
 _TBD: fix the demo_
 
@@ -116,7 +116,7 @@ Triggers when an internal link is clicked
 
 <script>
 
-import pdf from 'vue-pdf'
+import pdf from 'vue3-pdf-view'
 
 export default {
 	components: {
@@ -150,7 +150,7 @@ export default {
 
 <script>
 
-import pdf from 'vue-pdf'
+import pdf from 'vue3-pdf-view'
 
 var loadingTask = pdf.createLoadingTask('https://cdn.mozilla.net/pdfjs/tracemonkey.pdf');
 
@@ -213,7 +213,7 @@ export default {
 
 <script>
 
-import pdf from 'vue-pdf'
+import pdf from 'vue3-pdf-view'
 
 export default {
 	components: {
@@ -258,7 +258,7 @@ export default {
 	</div>
 </template>
 <script>
-import pdf from 'vue-pdf'
+import pdf from 'vue3-pdf-view'
 
 export default {
 	components: {

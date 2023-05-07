@@ -1,36 +1,38 @@
-import resizeSensor from 'vue-resize-sensor'
 
-export default function(pdfjsWrapper) {
+import { h } from 'vue'
+import EventBus from './bus'
+
+export default function (pdfjsWrapper) {
 
 	var createLoadingTask = pdfjsWrapper.createLoadingTask;
 	var PDFJSWrapper = pdfjsWrapper.PDFJSWrapper;
 
 	return {
 		createLoadingTask: createLoadingTask,
-		render: function(h) {
+		render: function () {
 			return h('span', {
-				attrs: {
-					style: 'position: relative; display: block'
+				style: {
+					position: 'relative',
+					display: 'block'
 				}
 			}, [
 				h('canvas', {
-					attrs: {
-						style: 'display: inline-block; width: 100%; height: 100%; vertical-align: top',
+					style: {
+						display: 'inline-block',
+						width: '100%',
+						height: '100%',
+						verticalAlign: 'top'
 					},
-					ref:'canvas'
+					ref: 'canvas'
 				}),
 				h('span', {
-					style: 'display: inline-block; width: 100%; height: 100%',
+					style: {
+						display: 'inline-block',
+						height: '100%',
+						width: '100%'
+					},
 					class: 'annotationLayer',
-					ref:'annotationLayer'
-				}),
-				h(resizeSensor, {
-					props: {
-						initial: true
-					},
-					on: {
-						resize: this.resize
-					},
+					ref: 'annotationLayer'
 				})
 			])
 		},
@@ -48,23 +50,23 @@ export default function(pdfjsWrapper) {
 			},
 		},
 		watch: {
-			src: function() {
+			src: function () {
 
 				this.pdf.loadDocument(this.src);
 			},
-			page: function() {
+			page: function () {
 
 				this.pdf.loadPage(this.page, this.rotate);
 			},
-			rotate: function() {
+			rotate: function () {
 				this.pdf.renderPage(this.rotate);
 			},
 		},
 		methods: {
-			resize: function(size) {
+			resize: function (size) {
 
 				// check if the element is attached to the dom tree || resizeSensor being destroyed
-				if ( this.$el.parentNode === null || (size.width === 0 && size.height === 0) )
+				if (this.$el.parentNode === null || (size.width === 0 && size.height === 0))
 					return;
 
 				// on IE10- canvas height must be set
@@ -72,37 +74,40 @@ export default function(pdfjsWrapper) {
 				// update the page when the resolution is too poor
 				var resolutionScale = this.pdf.getResolutionScale();
 
-				if ( resolutionScale < 0.85 || resolutionScale > 1.15 )
+				if (resolutionScale < 0.85 || resolutionScale > 1.15)
 					this.pdf.renderPage(this.rotate);
 
 				// this.$refs.annotationLayer.style.transform = 'scale('+resolutionScale+')';
 			},
-			print: function(dpi, pageList) {
+			print: function (dpi, pageList) {
 
 				this.pdf.printPage(dpi, pageList);
 			}
 		},
 
 		// doc: mounted hook is not called during server-side rendering.
-		mounted: function() {
+		mounted: function () {
+			const vue3Bus = new EventBus()
+			if (!this.vue3Bus) {
+				this.vue3Bus = vue3Bus
+			}
+			const that = this
+			this.pdf = new PDFJSWrapper(this.$refs.canvas, this.$refs.annotationLayer, this.vue3Bus.$emit.bind(this.vue3Bus));
 
-			this.pdf = new PDFJSWrapper(this.$refs.canvas, this.$refs.annotationLayer, this.$emit.bind(this));
 
-			this.$on('loaded', function() {
-
-				this.pdf.loadPage(this.page, this.rotate);
+			this.vue3Bus.$on('loaded', function () {
+				that.pdf.loadPage(that.page, that.rotate);
 			});
-
-			this.$on('page-size', function(width, height) {
-
-				this.$refs.canvas.style.height = this.$refs.canvas.offsetWidth * (height / width) + 'px';
+			this.vue3Bus.$on('page-size', function(width, height) {
+				that.$refs.canvas.style.height = that.$refs.canvas.offsetWidth * (height / width) + 'px';
 			});
-
 			this.pdf.loadDocument(this.src);
+
+
 		},
 
 		// doc: destroyed hook is not called during server-side rendering.
-		destroyed: function() {
+		destroyed: function () {
 
 			this.pdf.destroy();
 		}
