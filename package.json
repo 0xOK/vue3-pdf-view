@@ -1,6 +1,6 @@
 {
   "name": "vue3-pdf-view",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "vue.js pdf viewer",
   "main": "src/vuePdfNoSss.vue",
   "scripts": {},
@@ -13,7 +13,6 @@
     "pdf",
     "viewer"
   ],
-  "author": "Franck FREIBURGER",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/0xok/vue3-pdf-view/issues"
