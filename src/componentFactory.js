@@ -92,7 +92,11 @@ export default function (pdfjsWrapper) {
         this.vue3Bus = vue3Bus
       }
       const that = this
-      this.pdf = new PDFJSWrapper(this.$refs.canvas, this.$refs.annotationLayer, this.vue3Bus.$emit.bind(this.vue3Bus))
+      const myEmit = (name, ...args) => {
+        this.$emit(name, ...args)
+        this.vue3Bus.$emit(name, ...args)
+      }
+      this.pdf = new PDFJSWrapper(this.$refs.canvas, this.$refs.annotationLayer, myEmit);
 
 
       this.vue3Bus.$on('loaded', function () {
